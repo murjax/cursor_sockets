@@ -24,14 +24,16 @@ if (groupInfoElement) {
     },
 
     received(data) {
+      if (data.sessionId === sessionId) { return; }
+
       let userDiv = document.getElementById(data.sessionId);
 
       if (!userDiv) {
         userDiv = document.createElement("div");
         userDiv.id = data.sessionId;
-        userDiv.style.width = '5px';
-        userDiv.style.height = '5px';
-        userDiv.style.backgroundColor = 'red';
+        userDiv.style.width = '8px';
+        userDiv.style.height = '8px';
+        userDiv.style.backgroundColor = generateVisibleColor();
         userDiv.style.borderRadius = '50%';
         userDiv.style.position = 'absolute';
         document.body.appendChild(userDiv);
@@ -41,4 +43,26 @@ if (groupInfoElement) {
       userDiv.style.top = (data.y + window.scrollY) + 'px';
     }
   });
+}
+
+function generateVisibleColor() {
+  let r = Math.floor(Math.random() * 200);
+  let g = Math.floor(Math.random() * 200);
+  let b = Math.floor(Math.random() * 200);
+
+  const darkComponent = Math.floor(Math.random() * 3);
+  switch (darkComponent) {
+    case 0:
+      r = Math.floor(Math.random() * 100)
+      break;
+    case 1:
+      g = Math.floor(Math.random() * 100);
+      break;
+    case 2:
+      b = Math.floor(Math.random() * 100);
+      break;
+  }
+
+  const hex = ((r << 16) | (g << 8) | b).toString(16).padStart(6, '0');
+  return "#" + hex;
 }
