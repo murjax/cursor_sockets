@@ -1,0 +1,13 @@
+<h1 class="text-4xl font-bold text-center">Group</h1>
+
+<div class="flex flex-col items-center">
+  <div class="w-3/4">
+    <p class="uppercase font-bold text-lg text-gray-800">Name</p>
+    <p><%= @group.name %></p>
+    <p class="uppercase font-bold text-lg text-gray-800">Created At</p>
+    <p><%= @group.created_at.strftime('%m/%d/%Y %I:%M%p') %></p>
+    <p class="uppercase font-bold text-lg text-gray-800">Actions</p>
+    <%= link_to("Edit", edit_group_path(@group.id), class: "block font-sans text-sm antialiased font-medium leading-normal text-amber-400") %>
+    <%= link_to("Delete", group_path(@group.id), method: :delete, class: "block font-sans text-sm antialiased font-medium leading-normal text-red-400") %>
+  </div>
+</div>

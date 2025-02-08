@@ -1,8 +1,9 @@
 development:
   adapter: postgresql
   encoding: unicode
-  url: <%= ENV['DATABASE_URL']
+  url: <%= ENV['DATABASE_URL'] %>
   pool: 5
+
 test:
   adapter: postgresql
   encoding: unicode

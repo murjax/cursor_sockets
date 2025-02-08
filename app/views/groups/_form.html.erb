@@ -1,0 +1,8 @@
+<div class="flex flex-col items-center mb-10">
+  <%= form_with(model: group, local: true, class: "w-3/4") do |form| %>
+    <%= form.label :name, required: true, class: "mb-2 uppercase font-bold text-sm text-gray-800" %>
+    <%= form.text_field :name, class: "border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" %>
+
+    <%= form.submit class: "w-full bg-blue-500 hover:bg-blue-700 text-white font-bold mt-4 py-2 px-4 rounded cursor-pointer" %>
+  <% end %>
+</div>

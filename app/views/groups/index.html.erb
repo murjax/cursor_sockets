@@ -1,0 +1,48 @@
+<h1>Group Index</h1>
+
+<div
+  class="hidden md:flex md:flex-col w-full h-full overflow-scroll text-gray-700 bg-white shadow-md rounded-xl bg-clip-border"
+>
+  <table class="w-full text-left table-auto min-w-max">
+    <thead>
+      <tr>
+        <th class="p-4 border-b border-gray-200">
+          <p class="block font-sans text-sm antialiased font-normal leading-none opacity-70">
+            Name
+          </p>
+        </th>
+        <th class="p-4 border-b border-gray-100">
+          <p class="block font-sans text-sm antialiased font-normal leading-none opacity-70">
+            Created At
+          </p>
+        </th>
+        <th class="p-4 border-b border-gray-100">
+          <p class="block font-sans text-sm antialiased font-normal leading-none opacity-70">
+            Action
+          </p>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @groups.each do |group| %>
+        <tr>
+          <td class="p-4 border-b border-gray-200">
+            <p class="block font-sans text-sm antialiased font-normal leading-normal">
+              <%= group.name %>
+            </p>
+          </td>
+          <td class="p-4 border-b border-gray-200">
+            <p class="block font-sans text-sm antialiased font-normal leading-normal">
+              <%= group.created_at.strftime('%m/%d/%Y %I:%M%p') %>
+            </p>
+          </td>
+          <td class="p-4 border-b border-gray-200">
+            <%= link_to("View", group_path(group.id), class: "block font-sans text-sm antialiased font-medium leading-normal text-blue-400") %>
+            <%= link_to("Edit", edit_group_path(group.id), class: "block font-sans text-sm antialiased font-medium leading-normal text-amber-400") %>
+            <%= link_to("Delete", group_path(group.id), method: :delete, data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "block text-sm antialiased font-medium leading-normal text-red-400") %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

@@ -23,6 +23,9 @@
   </head>
 
   <body>
-    <%= yield %>
+    <%= render partial: "layouts/nav_header" %>
+    <main class="container mx-auto mt-10 px-5">
+      <%= yield %>
+    </main>
   </body>
 </html>

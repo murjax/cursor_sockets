@@ -1,0 +1,17 @@
+<header>
+  <section>
+    <nav data-controller="nav">
+      <div class="block p-2 bg-white shadow-lg">
+        <div class="flex p-2 justify-between bg-white">
+          <h3 class="text-2xl text-white">
+            <%= link_to "Cursor Sockets", root_path, class: "px-1 text-black" %>
+          </h3>
+          <div class="flex">
+            <%= link_to "Groups", root_path, class: "p-2 rounded-md text-black font-medium hover:bg-slate-100" %>
+            <%= link_to "New Group", new_group_path, class: "p-2 rounded-md text-black font-medium hover:bg-slate-100" %>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </section>
+</header>
