@@ -18,4 +18,40 @@
       <%= link_to("Delete", group_path(@group.id), method: :delete, class: "block font-sans text-sm antialiased font-medium leading-normal text-red-400") %>
     </div>
   </div>
+
+  <div
+    class="hidden w-full mt-2 space-x-3 max-w-xs"
+    data-group-show-target="messageTemplate"
+  >
+    <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300 text-center leading-10"></div>
+    <div>
+      <div class="bg-gray-300 p-3 rounded-r-lg rounded-bl-lg">
+        <p class="text-sm"></p>
+      </div>
+      <span class="text-xs text-gray-500 leading-none"></span>
+    </div>
+  </div>
+
+  <div class="flex flex-col items-center relative md:rounded-md bg-white mb-10 p-2">
+    <h2 class="text-2xl"><%= @group.name %></h2>
+
+    <div class="flex flex-col items-center justify-center w-screen min-h-screen bg-gray-100 text-gray-800 p-10">
+      <div class="flex flex-col flex-grow w-full max-w-xl bg-white shadow-xl rounded-lg overflow-hidden">
+        <div
+          class="flex flex-col flex-grow h-0 p-4 overflow-auto"
+          data-group-show-target="chatLog"
+        >
+        </div>
+
+        <div class="bg-gray-300 p-4">
+          <input
+            class="flex items-center h-10 w-full rounded px-3 text-sm"
+            type="text"
+            placeholder="Type your message…"
+            data-group-show-target="chatInput"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
