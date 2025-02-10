@@ -2,42 +2,29 @@ import { Controller } from "@hotwired/stimulus"
 import consumer from "channels/consumer"
 
 export default class extends Controller {
-  static targets = ["info", "chatLog", "chatInput", "receiveTemplate", "senderTemplate"];
+  static targets = ["chatLog", "chatInput", "receiveTemplate", "senderTemplate"];
 
   connect() {
     if (document.documentElement.hasAttribute("data-turbo-preview")) { return; }
 
+    const context = this;
     const groupId = this.data.get("group-id");
 
-    const name = prompt("Enter your name");
-    this.name = name;
-    const sessionId = Math.floor(Math.random() * (3000 - 30) + 30);
-    this.sessionId = sessionId;
+    this.name = prompt("Enter your name");
+    this.sessionId = Math.floor(Math.random() * (3000 - 30) + 30);
 
-    let subscription;
-
-    const mouseMove = (event) => {
-      let x = event.clientX;
-      let y = event.clientY;
-      subscription.send({ messageType: "cursor", name, sessionId, x, y });
-    }
-    this.mouseMove = mouseMove;
-    const receiveTemplateTarget = this.receiveTemplateTarget;
-    const senderTemplateTarget = this.senderTemplateTarget;
-    const chatLogTarget = this.chatLogTarget;
-
-    subscription = consumer.subscriptions.create({ channel: "GroupChannel", group_id: groupId }, {
+    this.subscription = consumer.subscriptions.create({ channel: "GroupChannel", group_id: groupId }, {
       connected() {
-        document.addEventListener("mousemove", mouseMove);
+        document.addEventListener("mousemove", (event) => context.mouseMove(event, context));
       },
 
       disconnected() {
-        document.removeEventListener("mousemove", mouseMove);
+        document.removeEventListener("mousemove", (event) => context.mouseMove(event, context));
       },
 
       received(data) {
         if (data.messageType == "cursor") {
-          if (data.sessionId === sessionId) { return; }
+          if (data.sessionId === context.sessionId) { return; }
 
           let userDiv = document.getElementById(data.sessionId);
 
@@ -46,7 +33,7 @@ export default class extends Controller {
             userDiv.id = data.sessionId;
             userDiv.style.width = '8px';
             userDiv.style.height = '8px';
-            userDiv.style.backgroundColor = this.generateVisibleColor();
+            userDiv.style.backgroundColor = context.generateVisibleColor();
             userDiv.style.borderRadius = '50%';
             userDiv.style.position = 'absolute';
             document.body.appendChild(userDiv);
@@ -55,7 +42,7 @@ export default class extends Controller {
           userDiv.style.left = (data.x + window.scrollX) + 'px';
           userDiv.style.top = (data.y + window.scrollY) + 'px';
         } else if (data.messageType == "chat") {
-          const template = data.sessionId === sessionId ? senderTemplateTarget : receiveTemplateTarget;
+          const template = data.sessionId === context.sessionId ? context.senderTemplateTarget : context.receiveTemplateTarget;
           const messageDiv = template.cloneNode(true);
           delete messageDiv.dataset.groupShowTarget;
           messageDiv.classList.remove("hidden");
@@ -64,12 +51,10 @@ export default class extends Controller {
           messageDiv.querySelector("p:nth-child(2)").innerHTML = data.message;
           messageDiv.querySelector("span").innerHTML = data.sentAt;
 
-          chatLogTarget.appendChild(messageDiv);
+          context.chatLogTarget.appendChild(messageDiv);
         }
       }
     });
-
-    this.subscription = subscription;
   }
 
   chatInputTargetConnected() {
@@ -96,6 +81,13 @@ export default class extends Controller {
     if (this.subscription) {
       consumer.subscriptions.remove(this.subscription);
     }
+  }
+
+  mouseMove(event, context) {
+    context = context || this;
+    let x = event.clientX;
+    let y = event.clientY;
+    context.subscription.send({ messageType: "cursor", name: context.name, sessionId: context.sessionId, x, y });
   }
 
   generateVisibleColor() {
