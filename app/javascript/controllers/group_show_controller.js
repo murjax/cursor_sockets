@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 import consumer from "channels/consumer"
 
 export default class extends Controller {
-  static targets = ["info", "chatLog", "chatInput", "messageTemplate"];
+  static targets = ["info", "chatLog", "chatInput", "receiveTemplate", "senderTemplate"];
 
   connect() {
     if (document.documentElement.hasAttribute("data-turbo-preview")) { return; }
@@ -22,7 +22,8 @@ export default class extends Controller {
       subscription.send({ messageType: "cursor", name, sessionId, x, y });
     }
     this.mouseMove = mouseMove;
-    const messageTemplateTarget = this.messageTemplateTarget;
+    const receiveTemplateTarget = this.receiveTemplateTarget;
+    const senderTemplateTarget = this.senderTemplateTarget;
     const chatLogTarget = this.chatLogTarget;
 
     subscription = consumer.subscriptions.create({ channel: "GroupChannel", group_id: groupId }, {
@@ -54,13 +55,15 @@ export default class extends Controller {
           userDiv.style.left = (data.x + window.scrollX) + 'px';
           userDiv.style.top = (data.y + window.scrollY) + 'px';
         } else if (data.messageType == "chat") {
-          const messageDiv = messageTemplateTarget.cloneNode(true);
+          const template = data.sessionId === sessionId ? senderTemplateTarget : receiveTemplateTarget;
+          const messageDiv = template.cloneNode(true);
           delete messageDiv.dataset.groupShowTarget;
           messageDiv.classList.remove("hidden");
           messageDiv.classList.add("flex");
-          messageDiv.querySelector("div:nth-child(1)").innerHTML = data.sender;
-          messageDiv.querySelector("p").innerHTML = data.message;
+          messageDiv.querySelector("p:nth-child(1)").innerHTML = data.sender;
+          messageDiv.querySelector("p:nth-child(2)").innerHTML = data.message;
           messageDiv.querySelector("span").innerHTML = data.sentAt;
+
           chatLogTarget.appendChild(messageDiv);
         }
       }

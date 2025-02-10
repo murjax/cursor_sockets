@@ -21,15 +21,30 @@
 
   <div
     class="hidden w-full mt-2 space-x-3 max-w-xs"
-    data-group-show-target="messageTemplate"
+    data-group-show-target="receiveTemplate"
   >
     <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300 text-center leading-10"></div>
     <div>
-      <div class="bg-gray-300 p-3 rounded-r-lg rounded-bl-lg">
+      <div class="message bg-gray-300 p-3 rounded-r-lg rounded-bl-lg">
+        <p class="font-bold">Name</p>
         <p class="text-sm"></p>
       </div>
       <span class="text-xs text-gray-500 leading-none"></span>
     </div>
+  </div>
+
+  <div
+    class="hidden w-full mt-2 space-x-3 max-w-xs ml-auto justify-end"
+    data-group-show-target="senderTemplate"
+  >
+    <div>
+      <div class="bg-blue-600 text-white p-3 rounded-l-lg rounded-br-lg">
+        <p class="font-bold">Name</p>
+        <p class="text-sm"></p>
+      </div>
+      <span class="text-xs text-gray-500 leading-none"></span>
+    </div>
+    <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300 text-center leading-10"></div>
   </div>
 
   <div class="flex flex-col items-center relative md:rounded-md bg-white mb-10 p-2">
