@@ -1,38 +1,17 @@
 development:
-  primary:
-    adapter: postgresql
-    encoding: unicode
-    url: <%= ENV['DATABASE_URL'] %>
-    pool: 5
-  cable:
-    adapter: postgresql
-    encoding: unicode
-    url: <%= ENV['CABLE_DATABASE_URL'] %>
-    pool: 5
-    migrations_paths: db/cable_migrate
+  adapter: postgresql
+  encoding: unicode
+  url: <%= ENV['DATABASE_URL'] %>
+  pool: 5
 
 test:
-  primary:
-    adapter: postgresql
-    encoding: unicode
-    url: <%= ENV['TEST_DATABASE_URL'] %>
-    pool: 5
-  cable:
-    adapter: postgresql
-    encoding: unicode
-    url: <%= ENV['TEST_CABLE_DATABASE_URL'] %>
-    pool: 5
-    migrations_paths: db/cable_migrate
+  adapter: postgresql
+  encoding: unicode
+  url: <%= ENV['TEST_DATABASE_URL'] %>
+  pool: 5
 
 production:
-  primary:
-    adapter: postgresql
-    encoding: unicode
-    url: <%= ENV['DATABASE_URL'] %>
-    pool: 5
-  test:
-    adapter: postgresql
-    encoding: unicode
-    url: <%= ENV['CABLE_DATABASE_URL'] %>
-    pool: 5
-    migrations_paths: db/cable_migrate
+  adapter: postgresql
+  encoding: unicode
+  url: <%= ENV['DATABASE_URL'] %>
+  pool: 5
