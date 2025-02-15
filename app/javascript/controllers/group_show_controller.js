@@ -11,47 +11,22 @@ export default class extends Controller {
     const groupId = this.data.get("group-id");
 
     this.name = prompt("Enter your name");
-    this.sessionId = Math.floor(Math.random() * (3000 - 30) + 30);
+    this.sessionId = crypto.randomUUID();
 
     this.subscription = consumer.subscriptions.create({ channel: "GroupChannel", group_id: groupId }, {
       connected() {
-        document.addEventListener("mousemove", (event) => context.mouseMove(event, context));
+        document.addEventListener("mousemove", (event) => context.mouseMove(event));
       },
 
       disconnected() {
-        document.removeEventListener("mousemove", (event) => context.mouseMove(event, context));
+        document.removeEventListener("mousemove", (event) => context.mouseMove(event));
       },
 
       received(data) {
         if (data.messageType == "cursor") {
-          if (data.sessionId === context.sessionId) { return; }
-
-          let userDiv = document.getElementById(data.sessionId);
-
-          if (!userDiv) {
-            userDiv = document.createElement("div");
-            userDiv.id = data.sessionId;
-            userDiv.style.width = '8px';
-            userDiv.style.height = '8px';
-            userDiv.style.backgroundColor = context.generateVisibleColor();
-            userDiv.style.borderRadius = '50%';
-            userDiv.style.position = 'absolute';
-            document.body.appendChild(userDiv);
-          }
-
-          userDiv.style.left = (data.x + window.scrollX) + 'px';
-          userDiv.style.top = (data.y + window.scrollY) + 'px';
+          context.updateCursor(data);
         } else if (data.messageType == "chat") {
-          const template = data.sessionId === context.sessionId ? context.senderTemplateTarget : context.receiveTemplateTarget;
-          const messageDiv = template.cloneNode(true);
-          delete messageDiv.dataset.groupShowTarget;
-          messageDiv.classList.remove("hidden");
-          messageDiv.classList.add("flex");
-          messageDiv.querySelector("p:nth-child(1)").innerHTML = data.sender;
-          messageDiv.querySelector("p:nth-child(2)").innerHTML = data.message;
-          messageDiv.querySelector("span").innerHTML = data.sentAt;
-
-          context.chatLogTarget.appendChild(messageDiv);
+          context.updateChat(data);
         }
       }
     });
@@ -61,11 +36,11 @@ export default class extends Controller {
     this.chatInputTarget.addEventListener("keydown", (event) => {
       if (event.key === "Enter") {
         const message = this.chatInputTarget.value;
-        const messageId = Math.floor(Math.random() * (3000 - 30) + 30);
+        const messageId = crypto.randomUUID();
         const now = new Date();
-        const sentAt = now.toLocaleString('en-US', {
-          hour: 'numeric',
-          minute: 'numeric',
+        const sentAt = now.toLocaleString("en-US", {
+          hour: "numeric",
+          minute: "numeric",
           hour12: true
         });
 
@@ -83,32 +58,56 @@ export default class extends Controller {
     }
   }
 
-  mouseMove(event, context) {
-    context = context || this;
-    let x = event.clientX;
-    let y = event.clientY;
-    context.subscription.send({ messageType: "cursor", name: context.name, sessionId: context.sessionId, x, y });
+  mouseMove(event) {
+    const x = event.clientX;
+    const y = event.clientY;
+    this.subscription.send({ messageType: "cursor", name: this.name, sessionId: this.sessionId, x, y });
   }
 
   generateVisibleColor() {
-    let r = Math.floor(Math.random() * 200);
-    let g = Math.floor(Math.random() * 200);
-    let b = Math.floor(Math.random() * 200);
+    const generateComponent = (max) => Math.floor(Math.random() * max);
 
-    const darkComponent = Math.floor(Math.random() * 3);
-    switch (darkComponent) {
-      case 0:
-        r = Math.floor(Math.random() * 100)
-        break;
-      case 1:
-        g = Math.floor(Math.random() * 100);
-        break;
-      case 2:
-        b = Math.floor(Math.random() * 100);
-        break;
+    const components = Array(3).fill(0).map(() => generateComponent(200));
+    const darkIndex = generateComponent(3);
+
+    components[darkIndex] = generateComponent(100);
+
+    const hex = components.map(c => c.toString(16).padStart(2, "0")).join("");
+    return `#${hex}`;
+  }
+
+  updateCursor(data) {
+    if (data.sessionId === this.sessionId) { return; }
+
+    let cursorDiv = document.getElementById(data.sessionId);
+
+    if (!cursorDiv) {
+      cursorDiv = document.createElement("div");
+      cursorDiv.id = data.sessionId;
+      Object.assign(cursorDiv.style, {
+        width: "8px",
+        height: "8px",
+        backgroundColor: this.generateVisibleColor(),
+        borderRadius: "50%",
+        position: "absolute"
+      });
+      document.body.appendChild(cursorDiv);
     }
 
-    const hex = ((r << 16) | (g << 8) | b).toString(16).padStart(6, '0');
-    return "#" + hex;
+    cursorDiv.style.left = (data.x + window.scrollX) + "px";
+    cursorDiv.style.top = (data.y + window.scrollY) + "px";
+  }
+
+  updateChat(data) {
+    const template = data.sessionId === this.sessionId ? this.senderTemplateTarget : this.receiveTemplateTarget;
+    const messageDiv = template.cloneNode(true);
+    delete messageDiv.dataset.groupShowTarget;
+    messageDiv.classList.remove("hidden");
+    messageDiv.classList.add("flex");
+    messageDiv.querySelector(".name").innerHTML = data.sender;
+    messageDiv.querySelector(".message").innerHTML = data.message;
+    messageDiv.querySelector(".sent-at").innerHTML = data.sentAt;
+
+    this.chatLogTarget.appendChild(messageDiv);
   }
 }

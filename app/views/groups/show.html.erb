@@ -8,13 +8,17 @@
     class="hidden w-full mt-2 space-x-3 max-w-xs"
     data-group-show-target="receiveTemplate"
   >
-    <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300 text-center leading-10"></div>
+    <div class="flex justify-center items-center h-10 w-10 rounded-full bg-gray-300 text-center leading-10">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+      </svg>
+    </div>
     <div>
-      <div class="message bg-gray-300 p-3 rounded-r-lg rounded-bl-lg">
-        <p class="font-bold">Name</p>
-        <p class="text-sm"></p>
+      <div class="bg-gray-300 p-3 rounded-r-lg rounded-bl-lg">
+        <p class="name font-bold">Name</p>
+        <p class="message text-sm"></p>
       </div>
-      <span class="text-xs text-gray-500 leading-none"></span>
+      <span class="sent-at text-xs text-gray-500 leading-none"></span>
     </div>
   </div>
 
@@ -24,17 +28,21 @@
   >
     <div>
       <div class="bg-blue-600 text-white p-3 rounded-l-lg rounded-br-lg">
-        <p class="font-bold">Name</p>
-        <p class="text-sm"></p>
+        <p class="name font-bold">Name</p>
+        <p class="message text-sm"></p>
       </div>
-      <span class="text-xs text-gray-500 leading-none"></span>
+      <span class="sent-at text-xs text-gray-500 leading-none"></span>
     </div>
-    <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300 text-center leading-10"></div>
+    <div class="flex justify-center items-center h-10 w-10 rounded-full bg-gray-300 text-center leading-10">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+      </svg>
+    </div>
   </div>
 
   <div class="flex flex-col items-center relative md:rounded-md bg-white mb-10 p-2">
     <div class="flex flex-col items-center justify-center w-screen min-h-screen bg-gray-100 text-gray-800 p-10">
-      <div class="flex flex-col flex-grow w-full max-w-xl bg-white shadow-xl rounded-lg overflow-hidden">
+      <div class="flex flex-col flex-grow mb-40 w-full max-w-xl bg-white shadow-xl rounded-lg overflow-hidden">
         <div
           class="flex flex-col flex-grow h-0 p-4 overflow-auto"
           data-group-show-target="chatLog"
@@ -43,7 +51,7 @@
 
         <div class="bg-gray-300 p-4">
           <input
-            class="flex items-center h-10 w-full rounded px-3 text-sm"
+            class="flex items-center h-10 w-full rounded px-3 text-sm bg-white"
             type="text"
             placeholder="Type your message…"
             data-group-show-target="chatInput"
