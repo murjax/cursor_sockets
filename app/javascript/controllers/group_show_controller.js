@@ -2,7 +2,13 @@ import { Controller } from "@hotwired/stimulus"
 import consumer from "channels/consumer"
 
 export default class extends Controller {
-  static targets = ["chatLog", "chatInput", "receiveTemplate", "senderTemplate"];
+  static targets = [
+    "chatLog",
+    "chatInput",
+    "receiveTemplate",
+    "senderTemplate",
+    "userChangeTemplate"
+  ];
 
   connect() {
     if (document.documentElement.hasAttribute("data-turbo-preview")) { return; }
@@ -13,7 +19,12 @@ export default class extends Controller {
     this.name = prompt("Enter your name");
     this.sessionId = crypto.randomUUID();
 
-    this.subscription = consumer.subscriptions.create({ channel: "GroupChannel", group_id: groupId }, {
+    this.subscription = consumer.subscriptions.create({
+      channel: "GroupChannel",
+      group_id: groupId,
+      session_id: this.sessionId,
+      user_data: { name: this.name, session_id: this.sessionId }
+    }, {
       connected() {
         document.addEventListener("mousemove", (event) => context.mouseMove(event));
       },
@@ -23,10 +34,16 @@ export default class extends Controller {
       },
 
       received(data) {
-        if (data.messageType == "cursor") {
-          context.updateCursor(data);
-        } else if (data.messageType == "chat") {
-          context.updateChat(data);
+        switch(data.messageType) {
+          case "cursor":
+            context.updateCursor(data);
+            break;
+          case "chat":
+            context.updateChat(data);
+            break;
+          case "userChange":
+            context.updateUserChange(data);
+            break;
         }
       }
     });
@@ -107,6 +124,16 @@ export default class extends Controller {
     messageDiv.querySelector(".name").innerHTML = data.sender;
     messageDiv.querySelector(".message").innerHTML = data.message;
     messageDiv.querySelector(".sent-at").innerHTML = data.sentAt;
+
+    this.chatLogTarget.appendChild(messageDiv);
+  }
+
+  updateUserChange(data) {
+    const messageDiv = this.userChangeTemplateTarget.cloneNode(true);
+    delete messageDiv.dataset.groupShowTarget;
+    messageDiv.classList.remove("hidden");
+    messageDiv.classList.add("flex");
+    messageDiv.querySelector(".user-action").innerHTML = data.action;
 
     this.chatLogTarget.appendChild(messageDiv);
   }
